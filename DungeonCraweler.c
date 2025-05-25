@@ -213,6 +213,33 @@ void takeItems(Player* player)
     }
 }
 
+void printVisionChamberMap()
+{
+    printf(" Vision Chamber Map:                \n\n");
+    printf("                                                \n");
+    printf("       Lumbrig ---- Haunted Forrest ---- Ancient Runes\n");
+    printf("          |                |                    |\n");
+    printf("          |           Howling Chasm ------- Junk Yard\n");
+    printf("          |                                                  \n");
+    printf("     Snowy Plains ---- Vision Chamber                        \n");
+    printf("          |                                                  \n");
+    printf("    The Cursed Mines ---- Cave of Echoes ---- Maze of Bones  \n");
+    printf("          |                                         |        \n");
+    printf("      DragonDen ---- Excalibur Chamber        Poissendeswap  \n");
+    printf("          |                                         |        \n");
+    printf("          |                                         |        \n");
+    printf("          |                                         |        \n");
+    printf("          |                                         |        \n");
+    printf("          |                                    King's Row    \n");
+    printf("          |                                                   \n");
+    printf("     Lava Fissure ---- Hyrule Castle ---- Legacyroom                         \n");
+    printf("          |                  |                                 \n");
+    printf("      Darkshrine ---- Snake Temple ---- Gates of Sorrow ---- Ethernaty (x)                                                    \n");
+    printf("                                              |                             \n");
+    printf("                                          Lake of Hope                      \n");
+    printf("\n( 'x' = end goal )\n\n");
+}
+
 void fightMonster(Player* player) {
     Monster* monster = player->currentRoom->monster;
     if (!monster) return;
