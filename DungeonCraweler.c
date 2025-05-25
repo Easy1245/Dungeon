@@ -158,8 +158,9 @@ void takeItems(Player* player)
                 int heal = 35;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
-                printf("🍎 The Golden Apple heals you by %d HP! New health: %d\n", heal, player->health);
-            } else if (strcmp(item, "Hyldrul Shield") == 0) {
+                printf("🍎 The Golden Apple heals you by %d HP! New HP: %d\n", heal, player->health);
+            } else if (strcmp(item, "Hyldrul Shield") == 0) 
+            {
                 printf("🛡️ You feel protected by the Hyldrul Shield.\n");
                 player->defense += 10;
             } else if (strcmp(item, "Iron Pickaxe") == 0) {
@@ -170,17 +171,20 @@ void takeItems(Player* player)
                 printf("⚔️ The Excaliber is a legendary sword!\n");
                 player->damage += 50;
                 printf("Your weapon now does %d base damage.\n", player->damage);
-            } else if (strcmp(item, "Enchanted Golden Apple") == 0) {
+            } else if (strcmp(item, "Enchanted Golden Apple") == 0) 
+            {
                 int heal = 75;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
                 printf("🍏 The Enchanted Golden Apple heals you by %d HP! New health: %d\n", heal, player->health);
-            } else if (strcmp(item, "fernandes bottle") == 0) {
+            } else if (strcmp(item, "fernandes bottle") == 0) 
+            {
                 int heal = 30;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
                 printf("🥤 You picked up a fernandes bottle!\n");
-            } else if (strcmp(item, "Enchanted Armor") == 0) {
+            } else if (strcmp(item, "Enchanted Armor") == 0) 
+            {
                 printf("🛡️ You feel protected by the Enchanted Armor Shield.\n");
                 player->defense += 40;
             }
@@ -236,7 +240,8 @@ void fightMonster(Player* player) {
 
     printf("\n⚔️ Combat with %s started!\n", monster->name);
 
-    while (monster->health > 0 && player->health > 0) {
+    while (monster->health > 0 && player->health > 0) 
+    {
         printf("Your health: %d | %s health: %d\n", player->health, monster->name, monster->health);
         printf("Type 'a' to attack or 'r' to run: ");
 
@@ -279,10 +284,12 @@ void fightMonster(Player* player) {
         }
     }
 
-    if (player->health <= 0) {
+    if (player->health <= 0) 
+    {
         printf("💀 You were killed by the %s...\nGame Over. 💀\n", monster->name);
         exit(0);
-    } else {
+    } else 
+    {
         printf("✅ You defeated the %s!\n", monster->name);
         free(player->currentRoom->monster);
         player->currentRoom->monster = NULL;
@@ -302,16 +309,19 @@ void movePlayer(Player* player, int index) {
 
     Room* nextRoom = player->currentRoom->connections[index];
 
-    if (strcmp(nextRoom->name, "Excalibur Chamber") == 0) {
+    if (strcmp(nextRoom->name, "Excalibur Chamber") == 0) 
+    {
         bool hasDragonKey = false;
         bool hasRoyalKey = false;
 
-        for (int i = 0; i < player->inventoryCount; i++) {
+        for (int i = 0; i < player->inventoryCount; i++) 
+        {
             if (strcmp(player->inventory[i], "Dragon Key") == 0) hasDragonKey = true;
             if (strcmp(player->inventory[i], "Royal Key") == 0) hasRoyalKey = true;
         }
 
-        if (!hasDragonKey || !hasRoyalKey) {
+        if (!hasDragonKey || !hasRoyalKey) 
+        {
             printf("🚫 You need both the Dragon Key and the Royal Key to enter the Excalibur Chamber! 🚫\n");
             return;
         }
@@ -320,18 +330,22 @@ void movePlayer(Player* player, int index) {
     player->currentRoom = nextRoom;
     printf("You walk to: %s\n", nextRoom->name);
 
-    if (strcmp(nextRoom->name, "Vision Chamber") == 0) {
+    if (strcmp(nextRoom->name, "Vision Chamber") == 0) 
+    {
         printVisionChamberMap();
     }
 
-    if (nextRoom->monster) {
+    if (nextRoom->monster) 
+    {
         fightMonster(player);
     }
 }
 
-bool saveGame(const char* filename, Player* player) {
+bool saveGame(const char* filename, Player* player) 
+{
     FILE* f = fopen(filename, "wb");
-    if (!f) {
+    if (!f) 
+    {
         printf("Error opening save file.\n");
         return false;
     }
@@ -344,17 +358,21 @@ bool saveGame(const char* filename, Player* player) {
     fwrite(&player->defense, sizeof(int), 1, f);
     fwrite(&player->inventoryCount, sizeof(int), 1, f);
 
-    for (int i = 0; i < player->inventoryCount; i++) {
+    for (int i = 0; i < player->inventoryCount; i++) 
+    {
         size_t len = strlen(player->inventory[i]) + 1;
         fwrite(&len, sizeof(size_t), 1, f);
         fwrite(player->inventory[i], sizeof(char), len, f);
     }
 
-    for (int i = 0; i < roomCount; i++) {
-        for (int j = 0; j < MAX_ITEMS; j++) {
+    for (int i = 0; i < roomCount; i++) 
+    {
+        for (int j = 0; j < MAX_ITEMS; j++) 
+        {
             bool hasItem = (rooms[i]->items[j] != NULL);
             fwrite(&hasItem, sizeof(bool), 1, f);
-            if (hasItem) {
+            if (hasItem) 
+            {
                 size_t len = strlen(rooms[i]->items[j]) + 1;
                 fwrite(&len, sizeof(size_t), 1, f);
                 fwrite(rooms[i]->items[j], sizeof(char), len, f);
@@ -362,12 +380,14 @@ bool saveGame(const char* filename, Player* player) {
         }
         bool hasMonster = (rooms[i]->monster != NULL);
         fwrite(&hasMonster, sizeof(bool), 1, f);
-        if (hasMonster) {
+        if (hasMonster) 
+        {
             fwrite(&rooms[i]->monster->health, sizeof(int), 1, f);
         }
     }
 
-    for (int i = 0; i < roomCount; i++) {
+    for (int i = 0; i < roomCount; i++) 
+    {
         fwrite(&rooms[i]->hasTreasure, sizeof(bool), 1, f);
     }
 
@@ -376,14 +396,17 @@ bool saveGame(const char* filename, Player* player) {
     return true;
 }
 
-bool loadGame(const char* filename, Player* player) {
+bool loadGame(const char* filename, Player* player) 
+{
     FILE* f = fopen(filename, "rb");
-    if (!f) {
+    if (!f) 
+    {
         printf("Error opening save file.\n");
         return false;
     }
 
-    for (int i = 0; i < player->inventoryCount; i++) {
+    for (int i = 0; i < player->inventoryCount; i++) 
+    {
         free(player->inventory[i]);
     }
     free(player->inventory);
@@ -394,9 +417,11 @@ bool loadGame(const char* filename, Player* player) {
     fread(player->name, sizeof(char), MAX_NAME, f);
     int currentRoomIndex;
     fread(&currentRoomIndex, sizeof(int), 1, f);
-    if (currentRoomIndex >= 0 && currentRoomIndex < roomCount) {
+    if (currentRoomIndex >= 0 && currentRoomIndex < roomCount) 
+    {
         player->currentRoom = rooms[currentRoomIndex];
-    } else {
+    } else 
+    {
         fclose(f);
         printf("Invalid saved room index.\n");
         return false;
@@ -410,7 +435,8 @@ bool loadGame(const char* filename, Player* player) {
     player->inventoryCapacity = invCount > 10 ? invCount : 10;
     player->inventory = malloc(player->inventoryCapacity * sizeof(char*));
     player->inventoryCount = 0;
-    for (int i = 0; i < invCount; i++) {
+    for (int i = 0; i < invCount; i++) 
+    {
         size_t len;
         fread(&len, sizeof(size_t), 1, f);
         char* item = malloc(len);
@@ -418,8 +444,10 @@ bool loadGame(const char* filename, Player* player) {
         player->inventory[player->inventoryCount++] = item;
     }
 
-    for (int i = 0; i < roomCount; i++) {
-        for (int j = 0; j < MAX_ITEMS; j++) {
+    for (int i = 0; i < roomCount; i++) 
+    {
+        for (int j = 0; j < MAX_ITEMS; j++) 
+        {
             bool hasItem;
             fread(&hasItem, sizeof(bool), 1, f);
             if (rooms[i]->items[j]) {
@@ -438,15 +466,19 @@ bool loadGame(const char* filename, Player* player) {
         if (hasMonster) {
             if (!rooms[i]->monster) rooms[i]->monster = malloc(sizeof(Monster));
             fread(&rooms[i]->monster->health, sizeof(int), 1, f);
-        } else {
-            if (rooms[i]->monster) {
+        } 
+        else 
+        {
+            if (rooms[i]->monster) 
+            {
                 free(rooms[i]->monster);
                 rooms[i]->monster = NULL;
             }
         }
     }
 
-    for (int i = 0; i < roomCount; i++) {
+    for (int i = 0; i < roomCount; i++) 
+    {
         fread(&rooms[i]->hasTreasure, sizeof(bool), 1, f);
     }
 
@@ -556,27 +588,38 @@ int main()
         if (strcmp(input, "q") == 0) {
             printf("Game exited.\n");
             break;
-        } else if (strcmp(input, "take") == 0) {
+        } 
+        else if (strcmp(input, "take") == 0) 
+        {
             takeItems(&player);
-        } else if (strcmp(input, "save") == 0) {
+        } 
+        else if (strcmp(input, "save") == 0) 
+        {
             saveGame("savegame.dat", &player);
-        } else if (strcmp(input, "load") == 0) {
-            if (!loadGame("savegame.dat", &player)) {
+        } 
+        else if (strcmp(input, "load") == 0) 
+        {
+            if (!loadGame("savegame.dat", &player)) 
+            {
                 printf("Failed to load savegame.\n");
             }
-        } else {
+        } else 
+        {
             int choice = atoi(input);
             movePlayer(&player, choice);
         }
     }
 
-    for (int i = 0; i < player.inventoryCount; i++) {
+    for (int i = 0; i < player.inventoryCount; i++) 
+    {
         free(player.inventory[i]);
     }
     free(player.inventory);
 
-    for (int i = 0; i < roomCount; i++) {
-        for (int j = 0; j < MAX_ITEMS; j++) {
+    for (int i = 0; i < roomCount; i++) 
+    {
+        for (int j = 0; j < MAX_ITEMS; j++) 
+        {
             if (rooms[i]->items[j]) free(rooms[i]->items[j]);
         }
         if (rooms[i]->monster) free(rooms[i]->monster);
