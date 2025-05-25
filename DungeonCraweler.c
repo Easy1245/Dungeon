@@ -311,3 +311,131 @@ void movePlayer(Player* player, int index) {
         fightMonster(player);
     }
 }
+
+int main() 
+{
+   srand((unsigned int)time(NULL));
+
+rooms[14] = createRoom(14, "Cave of Echoes", "A cave where sounds echo endlessly.");
+rooms[3] = createRoom(3, "Poissendeswap", "A stinky swamp full of poison.");
+rooms[9] = createRoom(9, "Hyrule Castle", "A majestic castle.");
+rooms[0] = createRoom(0, "Lumbrig", "The humble start of your adventure.");
+rooms[20] = createRoom(20, "Junk Yard", "A heap of garbage and lost items.");
+rooms[6] = createRoom(6, "Lava Fissure", "A glowing fissure filled with lava.");
+rooms[12] = createRoom(12, "Maze of Bones", "A complicated maze filled with bones.");
+rooms[5] = createRoom(5, "Lake of Hope", "A serene glow of hope.");
+rooms[21] = createRoom(21, "Eternity, the End", "A place where everything ends.");
+rooms[13] = createRoom(13, "Gates of Sorrow", "Gates that emit sorrowful voices.");
+rooms[1] = createRoom(1, "Darkshrine", "A creepy shrine full of dark energy.");
+rooms[19] = createRoom(19, "Haunted Forest", "A forest full of ghostly sounds.");
+rooms[11] = createRoom(11, "Excalibur Chamber", "A holy room with the legendary sword Excalibur.");
+rooms[8] = createRoom(8, "Snowy Plains", "An endless snowy plain.");
+rooms[2] = createRoom(2, "Dragonden", "A huge cave with the roar of dragons.");
+rooms[10] = createRoom(10, "Vision Chamber", "A mystical room that reveals paths.");
+rooms[15] = createRoom(15, "Howling Chasm", "A deep chasm full of howling winds.");
+rooms[18] = createRoom(18, "Snake Temple", "A temple dedicated to snakes.");
+rooms[7] = createRoom(7, "King's Row", "A royal hall with torn banners.");
+rooms[4] = createRoom(4, "Legacyroom", "A room full of old symbols.");
+rooms[17] = createRoom(17, "Ancient Runes", "A place covered with mysterious runes.");
+rooms[16] = createRoom(16, "The Cursed Mines", "Mine shafts cursed by ancient spirits.");
+
+connectRooms(rooms[3], rooms[7]);
+connectRooms(rooms[19], rooms[15]);
+connectRooms(rooms[16], rooms[2]);
+connectRooms(rooms[17], rooms[20]);
+connectRooms(rooms[6], rooms[1]);
+connectRooms(rooms[8], rooms[10]);
+connectRooms(rooms[14], rooms[12]);
+connectRooms(rooms[0], rooms[8]);
+connectRooms(rooms[12], rooms[3]);
+connectRooms(rooms[6], rooms[9]);
+connectRooms(rooms[2], rooms[11]);
+connectRooms(rooms[2], rooms[6]);
+connectRooms(rooms[13], rooms[5]);
+connectRooms(rooms[0], rooms[19]);
+connectRooms(rooms[13], rooms[21]);
+connectRooms(rooms[19], rooms[17]);
+connectRooms(rooms[9], rooms[4]);
+connectRooms(rooms[18], rooms[13]);
+connectRooms(rooms[16], rooms[14]);
+connectRooms(rooms[8], rooms[16]);
+connectRooms(rooms[9], rooms[18]);
+connectRooms(rooms[1], rooms[18]);
+connectRooms(rooms[15], rooms[20]);
+
+addItem(rooms[1], "fernandes bottle");
+addItem(rooms[9], "Hyrule Shield");
+addItem(rooms[5], "Enchanted Golden Apple");
+addItem(rooms[16], "Golden Apple");
+addItem(rooms[17], "Rune Stone");
+addItem(rooms[20], "Rusty Key");
+addItem(rooms[11], "Excaliber");
+addItem(rooms[14], "Echo Crystal");
+addItem(rooms[6], "Golden Apple");
+addItem(rooms[14], "Iron Pickaxe");
+addItem(rooms[7], "Royal Key");
+addItem(rooms[4], "Enchanted Armor");
+addItem(rooms[2], "Dragon Key");
+addItem(rooms[18], "Golden Apple");
+addItem(rooms[10], "Golden Apple");
+
+
+    rooms[1]->monster = createMonster("Dark Spirit", 50);
+    rooms[2]->monster = createMonster("Fire Dragon", 80);
+    rooms[3]->monster = createMonster("Toxic Slime", 35);
+    rooms[14]->monster = createMonster("Echo Ghost", 25);
+    rooms[16]->monster = createMonster("Cursed Miner", 30);
+    rooms[17]->monster = createMonster("Rune Sentinel", 45);
+    rooms[18]->monster = createMonster("Guardian Snake", 55);
+    rooms[19]->monster = createMonster("Haunted Wraith", 40);
+    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 150);
+
+    // Schat in Vision Chamber
+    rooms[21]->hasTreasure = true;
+
+    Player player;
+    strncpy(player.name, "Hero", MAX_NAME);
+    player.health = 100;
+    player.damage = 10;
+    player.inventoryCount = 0; 
+    player.inventoryCapacity = 0;
+    player.inventory = NULL; // will allocate on first add
+    player.currentRoom = rooms[0];
+    player.defense = 0;
+
+    char input[INPUT_SIZE];
+    while (true) 
+    {
+        showRoom(&player);
+
+        if (!fgets(input, sizeof(input), stdin)) break;
+
+        if (strncmp(input, "q", 1) == 0) {
+            printf("Game afgesloten.\n");
+            break;
+        } else if (strncmp(input, "take", 4) == 0) {
+            takeItems(&player);
+        } else {
+            int choice = atoi(input);
+            movePlayer(&player, choice);
+        }
+    }
+
+    // Free allocated inventory strings
+    for (int i = 0; i < player.inventoryCount; i++) {
+        free(player.inventory[i]);
+    }
+    free(player.inventory);
+
+    // Free allocated rooms and their items and monsters
+    for (int i = 0; i < roomCount; i++) {
+        for (int j = 0; j < MAX_ITEMS; j++) {
+            if (rooms[i]->items[j]) free(rooms[i]->items[j]);
+        }
+        if (rooms[i]->monster) free(rooms[i]->monster);
+        free(rooms[i]);
+    }
+
+    return 0;
+}
+
