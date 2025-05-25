@@ -80,3 +80,26 @@ void connectRooms(Room* a, Room* b) {
         }
     }
 }
+
+void showRoom(const Player* player) {
+    Room* r = player->currentRoom;
+    printf("\nYou are in: %s\n%s\n", r->name, r->description);
+    if (r->monster) {
+        printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
+    }
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        if (r->items[i]) {
+            printf("🧺 You see an item: %s\n", r->items[i]);
+        }
+    }
+    if (r->hasTreasure) {
+        printf("💰 You see a treasure chest!\n");
+    }
+    printf("Available exits:\n");
+    for (int i = 0; i < MAX_CONNECTIONS; i++) {
+        if (r->connections[i]) {
+            printf("  [%d] %s\n", i, r->connections[i]->name);
+        }
+    }
+    printf("Type the number to move, 'take' to pick up items, 'save' to save the game, 'load' to load the game, 'q' to quit.\n");
+}
