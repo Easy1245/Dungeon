@@ -131,12 +131,12 @@ void showRoom(const Player* player)
     {
         if (r->items[i]) 
         {
-            printf("🧺 You see an item: %s\n", r->items[i]);
+            printf("🧺 You see an item: %s 🧺\n", r->items[i]);
         }
     }
     if (r->hasTreasure) 
     {
-        printf("💰 You see a treasure chest!\n");
+        printf("💰 You see a treasure chest! 💰\n");
     }
 
     printf("Available exits:\n");
@@ -193,11 +193,6 @@ void takeItems(Player* player)
                 printf("🛡️ You feel protected by the Hyldrul Shield. 🛡️\n");
                 player->defense += 10;
             } 
-            else if (strcmp(item, "Shield") == 0) 
-            {
-                printf("🛡️ You have acquired a Shield! 🛡️\n");
-                player->defense += 15; // Shield defense bonus
-            }
             else if (strcmp(item, "Iron Pickaxe") == 0) 
             {
                 printf("⚔️ The Iron Pickaxe feels powerful!\n");
@@ -589,7 +584,6 @@ int main()
     addItem(rooms[7], "Royal Key");
     addItem(rooms[5], "Enchanted Golden Apple");
     addItem(rooms[9], "Hyrule Shield");
-    addItem(rooms[9], "Shield");  // Added Shield item here
     addItem(rooms[11], "Excaliber");
     addItem(rooms[14], "Iron Pickaxe");
     addItem(rooms[14], "Echo Crystal");
