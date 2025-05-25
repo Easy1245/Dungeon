@@ -181,38 +181,48 @@ void takeItems(Player* player)
             printf("✅ You picked up: %s ✅\n", r->items[i]);
 
             const char* item = r->items[i];
-            if (strcmp(item, "Golden Apple") == 0) {
+            if (strcmp(item, "Golden Apple") == 0) 
+            {
                 int heal = 35;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
-                printf("🍎 The Golden Apple heals you by %d HP! New HP: %d\n", heal, player->health);
-            } else if (strcmp(item, "Hyldrul Shield") == 0) 
+                printf("🍏 The Golden Apple heals you by %d HP! New HP: %d 🍏\n", heal, player->health);
+            } 
+              else if (strcmp(item, "Hyldrul Shield") == 0) 
             {
-                printf("🛡️ You feel protected by the Hyldrul Shield.\n");
+                printf("🛡️ You feel protected by the Hyldrul Shield. 🛡️\n");
                 player->defense += 10;
-            } else if (strcmp(item, "Iron Pickaxe") == 0) {
+            } 
+              else if (strcmp(item, "Iron Pickaxe") == 0) 
+            {
                 printf("⚔️ The Iron Pickaxe feels powerful!\n");
                 player->damage += 15;
                 printf("Your weapon now does %d base damage.\n", player->damage);
-            } else if (strcmp(item, "Excaliber") == 0) {
-                printf("⚔️ The Excaliber is a legendary sword!\n");
+
+            } 
+              else if (strcmp(item, "Excaliber") == 0) 
+            {
+                printf("⛏️ The Excaliber is a legendary sword! ⛏️\n");
                 player->damage += 50;
                 printf("Your weapon now does %d base damage.\n", player->damage);
-            } else if (strcmp(item, "Enchanted Golden Apple") == 0) 
+            } 
+              else if (strcmp(item, "Enchanted Golden Apple") == 0) 
             {
                 int heal = 75;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
-                printf("🍏 The Enchanted Golden Apple heals you by %d HP! New health: %d\n", heal, player->health);
-            } else if (strcmp(item, "fernandes bottle") == 0) 
+                printf("🍏✨ The Enchanted Golden Apple heals you by %d HP! New health: %d 🍏✨\n", heal, player->health);
+            } 
+              else if (strcmp(item, "fernandes bottle") == 0) 
             {
                 int heal = 30;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
-                printf("🥤 You picked up a fernandes bottle!\n");
-            } else if (strcmp(item, "Enchanted Armor") == 0) 
+                printf("🥤 You picked up a fernandes bottle! 🥤\n");
+            } 
+              else if (strcmp(item, "Enchanted Armor") == 0) 
             {
-                printf("🛡️ You feel protected by the Enchanted Armor Shield.\n");
+                printf("🔰 You feel protected by the Enchanted Armor Shield. 🔰\n");
                 player->defense += 40;
             }
 
