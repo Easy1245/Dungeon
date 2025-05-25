@@ -39,8 +39,10 @@ typedef struct Player {
 Room* rooms[22];
 int roomCount = 22;
 
-int getRoomIndex(Room* room) {
-    for (int i = 0; i < roomCount; i++) {
+int getRoomIndex(Room* room) 
+{
+    for (int i = 0; i < roomCount; i++) 
+    {
         if (rooms[i] == room) return i;
     }
     return -1;
@@ -66,14 +68,30 @@ Room* createRoom(int id, const char* name, const char* description) {
     return room;
 }
 
+Monster* createMonster(const char* name, int health) 
+{
+    Monster* monster = malloc(sizeof(Monster));
+    if (!monster) 
+    {
+        perror("Failed to allocate monster");
+        exit(EXIT_FAILURE);
+    }
+    strncpy(monster->name, name, MAX_NAME - 1);
+    monster->name[MAX_NAME - 1] = '\0';
+    monster->health = health;
+    return monster;
+}
+
 void connectRooms(Room* a, Room* b) {
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
         if (a->connections[i] == NULL) {
             a->connections[i] = b;
             break;
         }
     }
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
         if (b->connections[i] == NULL) {
             b->connections[i] = a;
             break;
@@ -81,23 +99,29 @@ void connectRooms(Room* a, Room* b) {
     }
 }
 
-void showRoom(const Player* player) {
+void showRoom(const Player* player) 
+{
     Room* r = player->currentRoom;
     printf("\nYou are in: %s\n%s\n", r->name, r->description);
-    if (r->monster) {
+    if (r->monster) 
+    {
         printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
     }
-    for (int i = 0; i < MAX_ITEMS; i++) {
+    for (int i = 0; i < MAX_ITEMS; i++) 
+    {
         if (r->items[i]) {
             printf("🧺 You see an item: %s\n", r->items[i]);
         }
     }
-    if (r->hasTreasure) {
+    if (r->hasTreasure) 
+    {
         printf("💰 You see a treasure chest!\n");
     }
     printf("Available exits:\n");
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
-        if (r->connections[i]) {
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
+        if (r->connections[i]) 
+        {
             printf("  [%d] %s\n", i, r->connections[i]->name);
         }
     }
