@@ -249,10 +249,10 @@ void printVisionChamberMap()
     printf("                                                \n");
     printf("       Lumbrig ---- Haunted Forrest ---- Ancient Runes\n");
     printf("          |                |                    |\n");
-    printf("          |           Howling Chasm ------- Junk Yard\n");
-    printf("          |                                                  \n");
-    printf("     Snowy Plains ---- Vision Chamber                        \n");
-    printf("          |                                                  \n");
+    printf("          |           Howling Chasm ----- Storm Catcher\n");
+    printf("          |                                         |        \n");
+    printf("     Snowy Plains ---- Vision Chamber               |        \n");
+    printf("          |                                         |         \n");
     printf("    The Cursed Mines ---- Cave of Echoes ---- Maze of Bones  \n");
     printf("          |                                         |        \n");
     printf("      DragonDen ---- Excalibur Chamber        Poissendeswap  \n");
@@ -553,7 +553,7 @@ int main()
     rooms[17] = createRoom(17, "Ancient Runes", "A place covered with mysterious runes.");
     rooms[18] = createRoom(18, "Snake Temple", "A temple dedicated to snakes.");
     rooms[19] = createRoom(19, "Haunted Forest", "A forest full of ghostly sounds.");
-    rooms[20] = createRoom(20, "Junk Yard", "A heap of garbage and lost items.");
+    rooms[20] = createRoom(20, "Storm Catcher", "A heap of garbage and lost items.");
     rooms[21] = createRoom(21, "Eternity, the End", "A place where everything ends.");
 
     connectRooms(rooms[0], rooms[19]);
@@ -562,6 +562,7 @@ int main()
     connectRooms(rooms[19], rooms[17]);
     connectRooms(rooms[17], rooms[20]);
     connectRooms(rooms[15], rooms[20]);
+    connectRooms(rooms[20], rooms[12]);
     connectRooms(rooms[8], rooms[10]);
     connectRooms(rooms[8], rooms[16]);
     connectRooms(rooms[16], rooms[14]);
