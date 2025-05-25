@@ -10,12 +10,14 @@
 #define INPUT_SIZE 32 
 #define MAX_ITEMS 5  
 
-typedef struct Monster {
+typedef struct Monster 
+{
     char name[MAX_NAME];
     int health;
 } Monster;
 
-typedef struct Room {
+typedef struct Room 
+{
     int id;
     char name[MAX_NAME];
     char description[MAX_DESC];
@@ -25,7 +27,8 @@ typedef struct Room {
     bool hasTreasure;
 } Room;
 
-typedef struct Player {
+typedef struct Player 
+{
     char name[MAX_NAME];
     Room* currentRoom;
     char** inventory;      
@@ -39,16 +42,20 @@ typedef struct Player {
 Room* rooms[22];
 int roomCount = 22;
 
-int getRoomIndex(Room* room) {
-    for (int i = 0; i < roomCount; i++) {
+int getRoomIndex(Room* room) 
+{
+    for (int i = 0; i < roomCount; i++) 
+    {
         if (rooms[i] == room) return i;
     }
     return -1;
 }
 
-Room* createRoom(int id, const char* name, const char* description) {
+Room* createRoom(int id, const char* name, const char* description) 
+{
     Room* room = malloc(sizeof(Room));
-    if (!room) {
+    if (!room) 
+    {
         perror("Failed to allocate room");
         exit(EXIT_FAILURE);
     }
@@ -66,15 +73,20 @@ Room* createRoom(int id, const char* name, const char* description) {
     return room;
 }
 
-void connectRooms(Room* a, Room* b) {
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
-        if (a->connections[i] == NULL) {
+void connectRooms(Room* a, Room* b) 
+{
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
+        if (a->connections[i] == NULL) 
+        {
             a->connections[i] = b;
             break;
         }
     }
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
-        if (b->connections[i] == NULL) {
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
+        if (b->connections[i] == NULL) 
+        {
             b->connections[i] = a;
             break;
         }
@@ -95,43 +107,58 @@ Monster* createMonster(const char* name, int health)
     return monster;
 }
 
-void addItem(Room* room, const char* itemName) {
-    for (int i = 0; i < MAX_ITEMS; i++) {
-        if (room->items[i] == NULL) {
+void addItem(Room* room, const char* itemName) 
+{
+    for (int i = 0; i < MAX_ITEMS; i++) 
+    {
+        if (room->items[i] == NULL) 
+        {
             room->items[i] = strdup(itemName);
             return;
         }
     }
 }
 
-void showRoom(const Player* player) {
+void showRoom(const Player* player) 
+{
     Room* r = player->currentRoom;
     printf("\nYou are in: %s\n%s\n", r->name, r->description);
-    if (r->monster) {
-        printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
-    }
-    for (int i = 0; i < MAX_ITEMS; i++) {
-        if (r->items[i]) {
-            printf("🧺 You see an item: %s\n", r->items[i]);
+    if (r->monster) 
+        {
+            printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
         }
+    for (int i = 0; i < MAX_ITEMS; i++) 
+        {
+            if (r->items[i]) 
+                {
+                    printf("🧺 You see an item: %s\n", r->items[i]);
+                }
     }
-    if (r->hasTreasure) {
+        if (r->hasTreasure) 
+    {
         printf("💰 You see a treasure chest!\n");
     }
+
     printf("Available exits:\n");
-    for (int i = 0; i < MAX_CONNECTIONS; i++) {
-        if (r->connections[i]) {
+
+    for (int i = 0; i < MAX_CONNECTIONS; i++) 
+    {
+        if (r->connections[i]) 
+        {
             printf("  [%d] %s\n", i, r->connections[i]->name);
         }
     }
     printf("Type the number to move, 'take' to pick up items, 'save' to save the game, 'load' to load the game, 'q' to quit.\n");
 }
 
-static void addItemToInventory(Player* player, const char* item) {
-    if (player->inventoryCount >= player->inventoryCapacity) {
+static void addItemToInventory(Player* player, const char* item) 
+{
+    if (player->inventoryCount >= player->inventoryCapacity) 
+    {
         int newCapacity = (player->inventoryCapacity == 0) ? 10 : player->inventoryCapacity * 2;
         char** newInventory = realloc(player->inventory, newCapacity * sizeof(char*));
-        if (!newInventory) {
+        if (!newInventory) 
+        {
             printf(" Error: failed to expand inventory!\n");
             return;
         }
@@ -228,7 +255,7 @@ void printVisionChamberMap()
     printf("          |                                                   \n");
     printf("     Lava Fissure ---- Hyrule Castle ---- Legacyroom                         \n");
     printf("          |                  |                                 \n");
-    printf("      Darkshrine ---- Snake Temple ---- Gates of Sorrow ---- Ethernaty (x)                                                    \n");
+    printf("      Darkshrine ---- Snake Temple ---- Gates of Sorrow ---- Ethernaty (x)         \n");
     printf("                                              |                             \n");
     printf("                                          Lake of Hope                      \n");
     printf("\n( 'x' = end goal )\n\n");
@@ -279,7 +306,9 @@ void fightMonster(Player* player) {
                 }
             }
             printf("You can't run from here!\n");
-        } else {
+        } 
+        else 
+        {
             printf(" Invalid action.\n");
         }
     }
@@ -288,7 +317,9 @@ void fightMonster(Player* player) {
     {
         printf("💀 You were killed by the %s...\nGame Over. 💀\n", monster->name);
         exit(0);
-    } else 
+    } 
+
+    else 
     {
         printf("✅ You defeated the %s!\n", monster->name);
         free(player->currentRoom->monster);
@@ -296,8 +327,10 @@ void fightMonster(Player* player) {
     }
 }
 
-void movePlayer(Player* player, int index) {
-    if (index < 0 || index >= MAX_CONNECTIONS || player->currentRoom->connections[index] == NULL) {
+void movePlayer(Player* player, int index) 
+{
+    if (index < 0 || index >= MAX_CONNECTIONS || player->currentRoom->connections[index] == NULL) 
+    {
         printf("Invalid choice.\n");
         return;
     }
