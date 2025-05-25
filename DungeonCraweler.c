@@ -213,6 +213,65 @@ void takeItems(Player* player)
     }
 }
 
+void fightMonster(Player* player) {
+    Monster* monster = player->currentRoom->monster;
+    if (!monster) return;
+
+    printf("\n⚔️ Combat with %s started!\n", monster->name);
+
+    while (monster->health > 0 && player->health > 0) {
+        printf("Your health: %d | %s health: %d\n", player->health, monster->name, monster->health);
+        printf("Type 'a' to attack or 'r' to run: ");
+
+        char action[INPUT_SIZE];
+        if (!fgets(action, sizeof(action), stdin)) break;
+
+        if (action[0] == 'a') {
+            int damageToMonster = rand() % 11 + player->damage;  
+            int damageToPlayer = rand() % 16 + 5; 
+            int mitigatedDamage = damageToPlayer - player->defense;
+            if (mitigatedDamage < 0) mitigatedDamage = 0;
+
+            printf("👹 Monster attacks for %d damage", damageToPlayer);
+            if (player->defense > 0)
+                printf(" but your shield reduces it to %d!\n", mitigatedDamage);
+            else
+                printf("!\n");
+
+            player->health -= mitigatedDamage;
+            monster->health -= damageToMonster;
+
+            printf(" You hit the %s for %d damage!\n", monster->name, damageToMonster);
+            if (monster->health > 0) {
+                printf(" %s hits you for %d damage!\n", monster->name, damageToPlayer);
+            }
+        } 
+            else if (action[0] == 'r') 
+                {
+            printf("🏃‍♂️ You run back to the previous room!\n");
+            for (int i = 0; i < MAX_CONNECTIONS; i++) {
+                Room* back = player->currentRoom->connections[i];
+                if (back && back->monster == NULL) {
+                    player->currentRoom = back;
+                    return;
+                }
+            }
+            printf("You can't run from here!\n");
+        } else {
+            printf(" Invalid action.\n");
+        }
+    }
+
+    if (player->health <= 0) {
+        printf("💀 You were killed by the %s...\nGame Over. 💀\n", monster->name);
+        exit(0);
+    } else {
+        printf("✅ You defeated the %s!\n", monster->name);
+        free(player->currentRoom->monster);
+        player->currentRoom->monster = NULL;
+    }
+}
+
 void movePlayer(Player* player, int index) {
     if (index < 0 || index >= MAX_CONNECTIONS || player->currentRoom->connections[index] == NULL) {
         printf("Invalid choice.\n");
