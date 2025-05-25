@@ -36,6 +36,18 @@ typedef struct Player {
     int defense;
 } Player;
 
+typedef struct SaveData {
+    char playerName[MAX_NAME];
+    int currentRoomIndex;
+    int health;
+    int damage;
+    int defense;
+    int inventoryCount;
+    char inventory[MAX_ITEMS][MAX_NAME]; // Assuming a max length for item names
+    bool roomHasTreasure[22]; // Assuming 22 rooms
+    int monsterHealth[22]; // Assuming 22 rooms
+} SaveData;
+
 Room* rooms[22];
 int roomCount = 22;
 
@@ -338,6 +350,24 @@ void movePlayer(Player* player, int index) {
         fightMonster(player);
     }
 }
+
+
+
+bool saveGame(const char* filename, Player* player) {
+    FILE* f = fopen(filename, "w"); // Open in text mode
+    if (!f) {
+        printf("Error opening save file.\n");
+        return false;
+    }
+    // Create a SaveData struct
+    SaveData saveData;
+    strncpy(saveData.playerName, player->name, MAX_NAME);
+    saveData.currentRoomIndex = getRoomIndex(player->currentRoom);
+    saveData.health = player->health;
+    saveData.damage = player->damage;
+    saveData.defense = player->defense;
+    saveData.inventoryCount = player->inventoryCount;
+
 
 int main()
 {
