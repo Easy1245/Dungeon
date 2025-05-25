@@ -212,3 +212,43 @@ void takeItems(Player* player)
         exit(0);
     }
 }
+
+void movePlayer(Player* player, int index) {
+    if (index < 0 || index >= MAX_CONNECTIONS || player->currentRoom->connections[index] == NULL) {
+        printf("Invalid choice.\n");
+        return;
+    }
+
+    if (player->currentRoom->id == 10)
+    {
+        printVisionChamberMap(); 
+    }
+
+    Room* nextRoom = player->currentRoom->connections[index];
+
+    if (strcmp(nextRoom->name, "Excalibur Chamber") == 0) {
+        bool hasDragonKey = false;
+        bool hasRoyalKey = false;
+
+        for (int i = 0; i < player->inventoryCount; i++) {
+            if (strcmp(player->inventory[i], "Dragon Key") == 0) hasDragonKey = true;
+            if (strcmp(player->inventory[i], "Royal Key") == 0) hasRoyalKey = true;
+        }
+
+        if (!hasDragonKey || !hasRoyalKey) {
+            printf("🚫 You need both the Dragon Key and the Royal Key to enter the Excalibur Chamber! 🚫\n");
+            return;
+        }
+    }
+
+    player->currentRoom = nextRoom;
+    printf("You walk to: %s\n", nextRoom->name);
+
+    if (strcmp(nextRoom->name, "Vision Chamber") == 0) {
+        printVisionChamberMap();
+    }
+
+    if (nextRoom->monster) {
+        fightMonster(player);
+    }
+}
