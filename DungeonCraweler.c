@@ -124,17 +124,17 @@ void showRoom(const Player* player)
     Room* r = player->currentRoom;
     printf("\nYou are in: %s\n%s\n", r->name, r->description);
     if (r->monster) 
-        {
-            printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
-        }
-    for (int i = 0; i < MAX_ITEMS; i++) 
-        {
-            if (r->items[i]) 
-                {
-                    printf("🧺 You see an item: %s\n", r->items[i]);
-                }
+    {
+        printf("⚔️ There is a %s here! (Health: %d)\n", r->monster->name, r->monster->health);
     }
-        if (r->hasTreasure) 
+    for (int i = 0; i < MAX_ITEMS; i++) 
+    {
+        if (r->items[i]) 
+        {
+            printf("🧺 You see an item: %s\n", r->items[i]);
+        }
+    }
+    if (r->hasTreasure) 
     {
         printf("💰 You see a treasure chest!\n");
     }
@@ -159,7 +159,7 @@ static void addItemToInventory(Player* player, const char* item)
         char** newInventory = realloc(player->inventory, newCapacity * sizeof(char*));
         if (!newInventory) 
         {
-            printf(" Error: failed to expand inventory!\n");
+            printf("Error: failed to expand inventory!\n");
             return;
         }
         player->inventory = newInventory;
@@ -188,39 +188,43 @@ void takeItems(Player* player)
                 if (player->health > 100) player->health = 100;
                 printf("🍏 The Golden Apple heals you by %d HP! New HP: %d 🍏\n", heal, player->health);
             } 
-              else if (strcmp(item, "Hyldrul Shield") == 0) 
+            else if (strcmp(item, "Hyldrul Shield") == 0) 
             {
                 printf("🛡️ You feel protected by the Hyldrul Shield. 🛡️\n");
                 player->defense += 10;
             } 
-              else if (strcmp(item, "Iron Pickaxe") == 0) 
+            else if (strcmp(item, "Shield") == 0) 
+            {
+                printf("🛡️ You have acquired a Shield! 🛡️\n");
+                player->defense += 15; // Shield defense bonus
+            }
+            else if (strcmp(item, "Iron Pickaxe") == 0) 
             {
                 printf("⚔️ The Iron Pickaxe feels powerful!\n");
                 player->damage += 15;
                 printf("Your weapon now does %d base damage.\n", player->damage);
-
             } 
-              else if (strcmp(item, "Excaliber") == 0) 
+            else if (strcmp(item, "Excaliber") == 0) 
             {
                 printf("⛏️ The Excaliber is a legendary sword! ⛏️\n");
                 player->damage += 50;
                 printf("Your weapon now does %d base damage.\n", player->damage);
             } 
-              else if (strcmp(item, "Enchanted Golden Apple") == 0) 
+            else if (strcmp(item, "Enchanted Golden Apple") == 0) 
             {
                 int heal = 75;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
                 printf("🍏✨ The Enchanted Golden Apple heals you by %d HP! New health: %d 🍏✨\n", heal, player->health);
             } 
-              else if (strcmp(item, "fernandes bottle") == 0) 
+            else if (strcmp(item, "fernandes bottle") == 0) 
             {
                 int heal = 30;
                 player->health += heal;
                 if (player->health > 100) player->health = 100;
                 printf("🥤 You picked up a fernandes bottle! 🥤\n");
             } 
-              else if (strcmp(item, "Enchanted Armor") == 0) 
+            else if (strcmp(item, "Enchanted Armor") == 0) 
             {
                 printf("🔰 You feel protected by the Enchanted Armor Shield. 🔰\n");
                 player->defense += 40;
@@ -305,8 +309,8 @@ void fightMonster(Player* player) {
                 printf(" %s hits you for %d damage!\n", monster->name, damageToPlayer);
             }
         } 
-            else if (action[0] == 'r') 
-                {
+        else if (action[0] == 'r') 
+        {
             printf("🏃‍♂️ You run back to the previous room!\n");
             for (int i = 0; i < MAX_CONNECTIONS; i++) {
                 Room* back = player->currentRoom->connections[i];
@@ -328,10 +332,9 @@ void fightMonster(Player* player) {
         printf("💀 You were killed by the %s...\nGame Over. 💀\n", monster->name);
         exit(0);
     } 
-
     else 
     {
-        printf("✅ You defeated the %s!\n", monster->name);
+        printf("You defeated the %s!\n", monster->name);
         free(player->currentRoom->monster);
         player->currentRoom->monster = NULL;
     }
@@ -463,7 +466,8 @@ bool loadGame(const char* filename, Player* player)
     if (currentRoomIndex >= 0 && currentRoomIndex < roomCount) 
     {
         player->currentRoom = rooms[currentRoomIndex];
-    } else 
+    } 
+    else 
     {
         fclose(f);
         printf("Invalid saved room index.\n");
@@ -585,6 +589,7 @@ int main()
     addItem(rooms[7], "Royal Key");
     addItem(rooms[5], "Enchanted Golden Apple");
     addItem(rooms[9], "Hyrule Shield");
+    addItem(rooms[9], "Shield");  // Added Shield item here
     addItem(rooms[11], "Excaliber");
     addItem(rooms[14], "Iron Pickaxe");
     addItem(rooms[14], "Echo Crystal");
@@ -605,7 +610,7 @@ int main()
     rooms[17]->monster = createMonster("Rune Sentinel", 45);
     rooms[18]->monster = createMonster("Guardian Snake", 55);
     rooms[19]->monster = createMonster("Haunted Wraith", 40);
-    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 150);
+    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 250);
 
     rooms[21]->hasTreasure = true;
 
