@@ -339,6 +339,132 @@ void movePlayer(Player* player, int index) {
     }
 }
 
+bool saveGame(const char* filename, Player* player) {
+    FILE* f = fopen(filename, "wb");
+    if (!f) {
+        printf("Error opening save file.\n");
+        return false;
+    }
+
+    fwrite(player->name, sizeof(char), MAX_NAME, f);
+    int currentRoomIndex = getRoomIndex(player->currentRoom);
+    fwrite(&currentRoomIndex, sizeof(int), 1, f);
+    fwrite(&player->health, sizeof(int), 1, f);
+    fwrite(&player->damage, sizeof(int), 1, f);
+    fwrite(&player->defense, sizeof(int), 1, f);
+    fwrite(&player->inventoryCount, sizeof(int), 1, f);
+
+    for (int i = 0; i < player->inventoryCount; i++) {
+        size_t len = strlen(player->inventory[i]) + 1;
+        fwrite(&len, sizeof(size_t), 1, f);
+        fwrite(player->inventory[i], sizeof(char), len, f);
+    }
+
+    for (int i = 0; i < roomCount; i++) {
+        for (int j = 0; j < MAX_ITEMS; j++) {
+            bool hasItem = (rooms[i]->items[j] != NULL);
+            fwrite(&hasItem, sizeof(bool), 1, f);
+            if (hasItem) {
+                size_t len = strlen(rooms[i]->items[j]) + 1;
+                fwrite(&len, sizeof(size_t), 1, f);
+                fwrite(rooms[i]->items[j], sizeof(char), len, f);
+            }
+        }
+        bool hasMonster = (rooms[i]->monster != NULL);
+        fwrite(&hasMonster, sizeof(bool), 1, f);
+        if (hasMonster) {
+            fwrite(&rooms[i]->monster->health, sizeof(int), 1, f);
+        }
+    }
+
+    for (int i = 0; i < roomCount; i++) {
+        fwrite(&rooms[i]->hasTreasure, sizeof(bool), 1, f);
+    }
+
+    fclose(f);
+    printf("Game successfully saved.\n");
+    return true;
+}
+
+bool loadGame(const char* filename, Player* player) {
+    FILE* f = fopen(filename, "rb");
+    if (!f) {
+        printf("Error opening save file.\n");
+        return false;
+    }
+
+    for (int i = 0; i < player->inventoryCount; i++) {
+        free(player->inventory[i]);
+    }
+    free(player->inventory);
+    player->inventory = NULL;
+    player->inventoryCount = 0;
+    player->inventoryCapacity = 0;
+
+    fread(player->name, sizeof(char), MAX_NAME, f);
+    int currentRoomIndex;
+    fread(&currentRoomIndex, sizeof(int), 1, f);
+    if (currentRoomIndex >= 0 && currentRoomIndex < roomCount) {
+        player->currentRoom = rooms[currentRoomIndex];
+    } else {
+        fclose(f);
+        printf("Invalid saved room index.\n");
+        return false;
+    }
+    fread(&player->health, sizeof(int), 1, f);
+    fread(&player->damage, sizeof(int), 1, f);
+    fread(&player->defense, sizeof(int), 1, f);
+
+    int invCount = 0;
+    fread(&invCount, sizeof(int), 1, f);
+    player->inventoryCapacity = invCount > 10 ? invCount : 10;
+    player->inventory = malloc(player->inventoryCapacity * sizeof(char*));
+    player->inventoryCount = 0;
+    for (int i = 0; i < invCount; i++) {
+        size_t len;
+        fread(&len, sizeof(size_t), 1, f);
+        char* item = malloc(len);
+        fread(item, sizeof(char), len, f);
+        player->inventory[player->inventoryCount++] = item;
+    }
+
+    for (int i = 0; i < roomCount; i++) {
+        for (int j = 0; j < MAX_ITEMS; j++) {
+            bool hasItem;
+            fread(&hasItem, sizeof(bool), 1, f);
+            if (rooms[i]->items[j]) {
+                free(rooms[i]->items[j]);
+                rooms[i]->items[j] = NULL;
+            }
+            if (hasItem) {
+                size_t len;
+                fread(&len, sizeof(size_t), 1, f);
+                rooms[i]->items[j] = malloc(len);
+                fread(rooms[i]->items[j], sizeof(char), len, f);
+            }
+        }
+        bool hasMonster;
+        fread(&hasMonster, sizeof(bool), 1, f);
+        if (hasMonster) {
+            if (!rooms[i]->monster) rooms[i]->monster = malloc(sizeof(Monster));
+            fread(&rooms[i]->monster->health, sizeof(int), 1, f);
+        } else {
+            if (rooms[i]->monster) {
+                free(rooms[i]->monster);
+                rooms[i]->monster = NULL;
+            }
+        }
+    }
+
+    for (int i = 0; i < roomCount; i++) {
+        fread(&rooms[i]->hasTreasure, sizeof(bool), 1, f);
+    }
+
+    fclose(f);
+    printf("Game successfully loaded.\n");
+    return true;
+}
+
 int main()
 {
     srand((unsigned int)time(NULL));
