@@ -313,14 +313,14 @@ void fightMonster(Player* player) {
 
                 if (player->shieldDurability == 0) 
                 {
-                    printf("🛡️ Your shield has broken!\n");
+                    printf("🛡️ Your shield has broken! 🛡️\n");
                     player->defense -= 10; 
                     if (player->defense < 0) player->defense = 0;
                 }
             } 
             else 
             {
-                printf("👹 Monster attacks for %d damage!\n", damageToPlayer);
+                printf("👹 Monster attacks for %d damage! 👹\n", damageToPlayer);
                 player->health -= damageToPlayer;
                 monster->health -= damageToMonster;
             }
