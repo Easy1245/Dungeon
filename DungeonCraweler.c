@@ -245,29 +245,29 @@ void takeItems(Player* player)
 
 void printVisionChamberMap()
 {
-    printf(" Vision Chamber Map:                \n\n");
-    printf("                                                \n");
-    printf("       Lumbrig ---- Haunted Forrest ---- Ancient Runes\n");
-    printf("          |                |                    |\n");
-    printf("          |           Howling Chasm ----- Storm Catcher\n");
-    printf("          |                                         |        \n");
-    printf("     Snowy Plains ---- Vision Chamber               |        \n");
-    printf("          |                                         |         \n");
-    printf("    The Cursed Mines ---- Cave of Echoes ---- Maze of Bones  \n");
-    printf("          |                                         |        \n");
-    printf("      DragonDen ---- Excalibur Chamber        Poissendeswap  \n");
-    printf("          |                                         |        \n");
-    printf("          |                                         |        \n");
-    printf("          |                                         |        \n");
-    printf("          |                                         |        \n");
-    printf("          |                                    King's Row    \n");
-    printf("          |                                                   \n");
-    printf("     Lava Fissure ---- Hyrule Castle ---- Legacyroom                         \n");
-    printf("          |                  |                                 \n");
-    printf("      Darkshrine ---- Snake Temple ---- Gates of Sorrow ---- Ethernaty (x)         \n");
+    printf(" Vision Chamber Map:                                                        \n");
+    printf("                                                                            \n");
+    printf("       Lumbrig ---- Haunted Forrest ---------- Ancient Runes                \n");
+    printf("          |                |                        |                       \n");
+    printf("          |           Howling Chasm ---------- Storm Catcher                \n");
+    printf("          |                                         |                       \n");
+    printf("     Snowy Plains ---- Vision Chamber               |                       \n");
+    printf("          |                                         |                       \n");
+    printf("    The Cursed Mines ---- Cave of Echoes ---- Maze of Bones                 \n");
+    printf("          |                                         |                       \n");
+    printf("      DragonDen ---- Excalibur Chamber        Poissendeswap                 \n");
+    printf("          |                                         |                       \n");
+    printf("          |                                         |                       \n");
+    printf("          |                                         |                       \n");
+    printf("          |                                         |                       \n");
+    printf("          |                                    King's Row                   \n");
+    printf("          |                                                                 \n");
+    printf("     Lava Fissure ---- Hyrule Castle ---- Legacyroom                        \n");
+    printf("          |                  |                                              \n");
+    printf("      Darkshrine ---- Snake Temple ---- Gates of Sorrow ---- Ethernaty (x)  \n");
     printf("                                              |                             \n");
     printf("                                          Lake of Hope                      \n");
-    printf("\n( 'x' = end goal )\n\n");
+    printf("\n( 'x' = end goal )                                                        \n");
 }
 
 void fightMonster(Player* player) {
@@ -278,7 +278,7 @@ void fightMonster(Player* player) {
 
     while (monster->health > 0 && player->health > 0) 
     {
-        printf("Your health: %d | %s health: %d\n", player->health, monster->name, monster->health);
+        printf("Your HP: %d | %s HP: %d\n", player->health, monster->name, monster->health);
         printf("Type 'a' to attack or 'r' to run: ");
 
         char action[INPUT_SIZE];
@@ -300,16 +300,19 @@ void fightMonster(Player* player) {
             monster->health -= damageToMonster;
 
             printf(" You hit the %s for %d damage!\n", monster->name, damageToMonster);
-            if (monster->health > 0) {
+            if (monster->health > 0) 
+            {
                 printf(" %s hits you for %d damage!\n", monster->name, damageToPlayer);
             }
         } 
         else if (action[0] == 'r') 
         {
             printf("🏃‍♂️ You run back to the previous room!\n");
-            for (int i = 0; i < MAX_CONNECTIONS; i++) {
+            for (int i = 0; i < MAX_CONNECTIONS; i++) 
+            {
                 Room* back = player->currentRoom->connections[i];
-                if (back && back->monster == NULL) {
+                if (back && back->monster == NULL) 
+                {
                     player->currentRoom = back;
                     return;
                 }
@@ -553,7 +556,7 @@ int main()
     rooms[17] = createRoom(17, "Ancient Runes", "A place covered with mysterious runes.");
     rooms[18] = createRoom(18, "Snake Temple", "A temple dedicated to snakes.");
     rooms[19] = createRoom(19, "Haunted Forest", "A forest full of ghostly sounds.");
-    rooms[20] = createRoom(20, "Storm Catcher", "A heap of garbage and lost items.");
+    rooms[20] = createRoom(20, "Storm Catcher", "A stormy labertory to do research on storms");
     rooms[21] = createRoom(21, "Eternity, the End", "A place where everything ends.");
 
     connectRooms(rooms[0], rooms[19]);
@@ -581,31 +584,32 @@ int main()
     connectRooms(rooms[13], rooms[5]);
     connectRooms(rooms[13], rooms[21]);
 
+    addItem(rooms[1], "fernandes bottle");
     addItem(rooms[2], "Dragon Key");
-    addItem(rooms[7], "Royal Key");
+    addItem(rooms[4], "Enchanted Armor");
     addItem(rooms[5], "Enchanted Golden Apple");
+    addItem(rooms[6], "Golden Apple");
+    addItem(rooms[7], "Royal Key");
     addItem(rooms[9], "Hyrule Shield");
+    addItem(rooms[10], "Golden Apple");
     addItem(rooms[11], "Excaliber");
+    addItem(rooms[13], "PokeBall ");
     addItem(rooms[14], "Iron Pickaxe");
-    addItem(rooms[14], "Echo Crystal");
     addItem(rooms[16], "Golden Apple");
     addItem(rooms[17], "Rune Stone");
     addItem(rooms[18], "Golden Apple");
     addItem(rooms[20], "Rusty Key");
-    addItem(rooms[1], "fernandes bottle");
-    addItem(rooms[4], "Enchanted Armor");
-    addItem(rooms[6], "Golden Apple");
-    addItem(rooms[10], "Golden Apple");
-
+    
     rooms[1]->monster = createMonster("Dark Spirit", 50);
     rooms[2]->monster = createMonster("Fire Dragon", 80);
     rooms[3]->monster = createMonster("Toxic Slime", 35);
     rooms[14]->monster = createMonster("Echo Ghost", 25);
     rooms[16]->monster = createMonster("Cursed Miner", 30);
     rooms[17]->monster = createMonster("Rune Sentinel", 45);
-    rooms[18]->monster = createMonster("Guardian Snake", 55);
+    rooms[18]->monster = createMonster("Seviper", 75);
     rooms[19]->monster = createMonster("Haunted Wraith", 40);
-    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 250);
+    rooms[20]->monster = createMonster("Mad Storm scientis", 20);
+    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 350);
 
     rooms[21]->hasTreasure = true;
 
@@ -638,7 +642,7 @@ int main()
         } 
         else if (strcmp(input, "save") == 0) 
         {
-            saveGame("savegame.dat", &player);
+            saveGame("savegame.dat", &player); 
         } 
         else if (strcmp(input, "load") == 0) 
         {
