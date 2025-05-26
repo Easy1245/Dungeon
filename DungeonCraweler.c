@@ -51,6 +51,11 @@ int getRoomIndex(Room* room)
     return -1;
 }
 
+void GameTitle()
+{
+  printf("Welcome to: Ethernaty: Descent Beyond");
+}    
+
 Room* createRoom(int id, const char* name, const char* description) 
 {
     Room* room = malloc(sizeof(Room));
@@ -534,6 +539,9 @@ bool loadGame(const char* filename, Player* player)
 
 int main()
 {
+
+    GameTitle();
+
     srand((unsigned int)time(NULL));
 
     rooms[0] = createRoom(0, "Lumbrig", "The humble start of your adventure.");
