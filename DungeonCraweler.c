@@ -37,6 +37,7 @@ typedef struct Player
     int health;
     int damage;
     int defense;
+    int shieldDurability; 
 } Player;
 
 Room* rooms[22];
@@ -197,6 +198,7 @@ void takeItems(Player* player)
             {
                 printf("🛡️ You feel protected by the Hyldrul Shield. 🛡️\n");
                 player->defense += 10;
+                player->shieldDurability = 3; 
             } 
             else if (strcmp(item, "Iron Pickaxe") == 0) 
             {
@@ -228,6 +230,7 @@ void takeItems(Player* player)
             {
                 printf("🔰 You feel protected by the Enchanted Armor Shield. 🔰\n");
                 player->defense += 40;
+                player->shieldDurability = 3;
             }
 
             free(r->items[i]);
@@ -295,14 +298,32 @@ void fightMonster(Player* player) {
             int mitigatedDamage = damageToPlayer - player->defense;
             if (mitigatedDamage < 0) mitigatedDamage = 0;
 
-            printf("👹 Monster attacks for %d damage", damageToPlayer);
-            if (player->defense > 0)
-                printf(" but your shield reduces it to %d!\n", mitigatedDamage);
-            else
-                printf("!\n");
+            if (player->shieldDurability > 0) 
+            {
+                printf("👹 Monster attacks for %d damage", damageToPlayer);
+                if (player->defense > 0)
+                    printf(" but your shield reduces it to %d!\n", mitigatedDamage);
+                else
+                    printf("!\n");
 
-            player->health -= mitigatedDamage;
-            monster->health -= damageToMonster;
+                player->health -= mitigatedDamage;
+                monster->health -= damageToMonster;
+
+                player->shieldDurability--;
+
+                if (player->shieldDurability == 0) 
+                {
+                    printf("🛡️ Your shield has broken!\n");
+                    player->defense -= 10; 
+                    if (player->defense < 0) player->defense = 0;
+                }
+            } 
+            else 
+            {
+                printf("👹 Monster attacks for %d damage!\n", damageToPlayer);
+                player->health -= damageToPlayer;
+                monster->health -= damageToMonster;
+            }
 
             printf(" You hit the %s for %d damage!\n", monster->name, damageToMonster);
             if (monster->health > 0) 
@@ -405,6 +426,7 @@ bool saveGame(const char* filename, Player* player)
     fwrite(&player->health, sizeof(int), 1, f);
     fwrite(&player->damage, sizeof(int), 1, f);
     fwrite(&player->defense, sizeof(int), 1, f);
+    fwrite(&player->shieldDurability, sizeof(int), 1, f); 
     fwrite(&player->inventoryCount, sizeof(int), 1, f);
 
     for (int i = 0; i < player->inventoryCount; i++) 
@@ -479,6 +501,7 @@ bool loadGame(const char* filename, Player* player)
     fread(&player->health, sizeof(int), 1, f);
     fread(&player->damage, sizeof(int), 1, f);
     fread(&player->defense, sizeof(int), 1, f);
+    fread(&player->shieldDurability, sizeof(int), 1, f); 
 
     int invCount = 0;
     fread(&invCount, sizeof(int), 1, f);
@@ -598,7 +621,7 @@ int main()
     addItem(rooms[5], "Enchanted Golden Apple");
     addItem(rooms[6], "Golden Apple");
     addItem(rooms[7], "Royal Key");
-    addItem(rooms[9], "Hyrule Shield");
+    addItem(rooms[9], "Hyldrul Shield"); 
     addItem(rooms[10], "Golden Apple");
     addItem(rooms[11], "Excaliber");
     addItem(rooms[13], "PokeBall ");
@@ -617,7 +640,7 @@ int main()
     rooms[18]->monster = createMonster("Seviper", 75);
     rooms[19]->monster = createMonster("Haunted Wraith", 40);
     rooms[20]->monster = createMonster("Mad Storm scientis", 20);
-    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 350);
+    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 1000);
 
     rooms[21]->hasTreasure = true;
 
@@ -630,6 +653,7 @@ int main()
     player.inventory = NULL; 
     player.currentRoom = rooms[0];
     player.defense = 0;
+    player.shieldDurability = 0;
 
     char input[INPUT_SIZE];
     while (true)
