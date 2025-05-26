@@ -327,7 +327,7 @@ void fightMonster(Player* player) {
 
     if (player->health <= 0) 
     {
-        printf("💀 You were killed by the %s...\nGame Over. 💀\n", monster->name);
+        printf("💀 Hero was slained by %s...\n Game Over. 💀\n", monster->name);
         exit(0);
     } 
     else 
