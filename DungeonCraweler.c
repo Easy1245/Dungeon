@@ -197,7 +197,7 @@ void takeItems(Player* player)
             else if (strcmp(item, "Hyldrul Shield") == 0) 
             {
                 printf("🛡️ You feel protected by the Hyldrul Shield. 🛡️\n");
-                player->defense += 10;
+                player->defense += 5;
                 player->shieldDurability = 1; 
             } 
             else if (strcmp(item, "Iron Pickaxe") == 0) 
@@ -229,7 +229,7 @@ void takeItems(Player* player)
             else if (strcmp(item, "Enchanted Armor") == 0) 
             {
                 printf("🔰 You feel protected by the Enchanted Armor Shield. 🔰\n");
-                player->defense += 40;
+                player->defense += 25;
                 player->shieldDurability = 4;
             }
 
@@ -640,7 +640,7 @@ int main()
     rooms[18]->monster = createMonster("Seviper", 75);
     rooms[19]->monster = createMonster("Haunted Wraith", 40);
     rooms[20]->monster = createMonster("Mad Storm scientis", 20);
-    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 350);
+    rooms[21]->monster = createMonster("Slifer The Sky Dragon", 500);
 
     rooms[21]->hasTreasure = true;
 
